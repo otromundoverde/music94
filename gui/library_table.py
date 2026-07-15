@@ -1,53 +1,85 @@
 from PySide6.QtWidgets import (
-    QAbstractItemView,
-    QHeaderView,
     QTableWidget,
     QTableWidgetItem,
 )
 
-from gui.library_data import SONGS
+from gui.library_manager import LibraryManager
 
 
 class LibraryTable(QTableWidget):
 
     def __init__(self):
+
         super().__init__()
+
+        self.library = LibraryManager()
+
+        self.show_library()
+
+    def show_library(self):
 
         self.setColumnCount(6)
 
-        self.setHorizontalHeaderLabels([
-            "Canción",
-            "Artista",
-            "Álbum",
-            "Año",
-            "Género",
-            "Duración",
-        ])
+        self.setHorizontalHeaderLabels(
 
-        self.horizontalHeader().setSectionResizeMode(
-            QHeaderView.Stretch
+            [
+
+                "Canción",
+
+                "Artista",
+
+                "Álbum",
+
+                "Año",
+
+                "Género",
+
+                "Duración",
+
+            ]
+
         )
 
-        self.setSelectionBehavior(
-            QAbstractItemView.SelectRows
-        )
+        self.load(self.library.get_songs())
 
-        self.setEditTriggers(
-            QAbstractItemView.NoEditTriggers
-        )
+    def show_list(self, title, values):
 
-        self.load_songs()
+        self.clear()
 
-    def load_songs(self):
+        self.setColumnCount(1)
 
-        self.setRowCount(len(SONGS))
+        self.setHorizontalHeaderLabels([title])
 
-        for fila, cancion in enumerate(SONGS):
+        self.setRowCount(len(values))
 
-            for columna, valor in enumerate(cancion):
+        for row, value in enumerate(values):
+
+            self.setItem(
+
+                row,
+
+                0,
+
+                QTableWidgetItem(value)
+
+            )
+
+    def load(self, songs):
+
+        self.clearContents()
+
+        self.setRowCount(len(songs))
+
+        for row, song in enumerate(songs):
+
+            for column, value in enumerate(song):
 
                 self.setItem(
-                    fila,
-                    columna,
-                    QTableWidgetItem(valor),
+
+                    row,
+
+                    column,
+
+                    QTableWidgetItem(str(value))
+
                 )

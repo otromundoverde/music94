@@ -14,9 +14,11 @@ from gui.tool_bar import Music94ToolBar
 class Music94(QMainWindow):
 
     def __init__(self):
+
         super().__init__()
 
         self.setWindowTitle("Music94")
+
         self.resize(1200, 700)
 
         self.create_menu()
@@ -27,23 +29,36 @@ class Music94(QMainWindow):
 
         splitter = QSplitter(Qt.Horizontal)
 
-        splitter.addWidget(NavigationPanel())
+        self.navigation = NavigationPanel()
 
-        splitter.addWidget(ContentPanel())
+        self.content = ContentPanel()
 
-        splitter.setSizes([240, 960])
+        splitter.addWidget(self.navigation)
+
+        splitter.addWidget(self.content)
+
+        splitter.setSizes([220, 980])
 
         self.setCentralWidget(splitter)
+
+        self.navigation.page_selected.connect(
+            self.content.show_page
+        )
 
     def create_menu(self):
 
         menu = self.menuBar()
 
         archivo = menu.addMenu("Archivo")
+
         menu.addMenu("Biblioteca")
+
         menu.addMenu("Spotify")
+
         menu.addMenu("Ver")
+
         menu.addMenu("Herramientas")
+
         menu.addMenu("Ayuda")
 
         salir = QAction("Salir", self)
