@@ -1,21 +1,18 @@
-from PySide6.QtWidgets import QTreeWidget, QTreeWidgetItem
+from PySide6.QtWidgets import QListWidget
 
 
-class NavigationPanel(QTreeWidget):
+class NavigationPanel(QListWidget):
+
     def __init__(self):
         super().__init__()
 
-        self.setHeaderHidden(True)
-
-        biblioteca = QTreeWidgetItem(["Biblioteca"])
-
-        QTreeWidgetItem(biblioteca, ["Canciones"])
-        QTreeWidgetItem(biblioteca, ["Artistas"])
-        QTreeWidgetItem(biblioteca, ["Álbumes"])
-        QTreeWidgetItem(biblioteca, ["Géneros"])
-        QTreeWidgetItem(biblioteca, ["Décadas"])
-        QTreeWidgetItem(biblioteca, ["Favoritos"])
-
-        self.addTopLevelItem(biblioteca)
-        biblioteca.setExpanded(True)
-        
+        self.addItem("🏠 Inicio")
+        self.addItem("🎵 Biblioteca")
+        self.addItem("👤 Artistas")
+        self.addItem("💿 Álbumes")
+        self.addItem("🎼 Géneros")
+        self.addItem("📅 Años")
+        self.addItem("⭐ Favoritos")
+        self.addItem("📈 Estadísticas")
+        self.addItem("🔎 Buscar")
+        self.addItem("⚙ Configuración")

@@ -5,13 +5,14 @@ from PySide6.QtWidgets import (
     QSplitter,
 )
 
+from gui.content_panel import ContentPanel
 from gui.navigation_panel import NavigationPanel
-from gui.library_table import LibraryTable
 from gui.status_bar import Music94StatusBar
 from gui.tool_bar import Music94ToolBar
 
 
 class Music94(QMainWindow):
+
     def __init__(self):
         super().__init__()
 
@@ -21,18 +22,21 @@ class Music94(QMainWindow):
         self.create_menu()
 
         self.setStatusBar(Music94StatusBar())
+
         self.addToolBar(Music94ToolBar())
 
         splitter = QSplitter(Qt.Horizontal)
 
         splitter.addWidget(NavigationPanel())
-        splitter.addWidget(LibraryTable())
 
-        splitter.setSizes([250, 950])
+        splitter.addWidget(ContentPanel())
+
+        splitter.setSizes([240, 960])
 
         self.setCentralWidget(splitter)
 
     def create_menu(self):
+
         menu = self.menuBar()
 
         archivo = menu.addMenu("Archivo")
@@ -43,6 +47,7 @@ class Music94(QMainWindow):
         menu.addMenu("Ayuda")
 
         salir = QAction("Salir", self)
+
         salir.triggered.connect(self.close)
 
         archivo.addAction(salir)

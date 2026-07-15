@@ -1,5 +1,9 @@
-from PySide6.QtWidgets import QTableWidget
-from PySide6.QtWidgets import QTableWidgetItem
+from PySide6.QtWidgets import (
+    QAbstractItemView,
+    QHeaderView,
+    QTableWidget,
+    QTableWidgetItem,
+)
 
 from gui.library_data import SONGS
 
@@ -11,15 +15,25 @@ class LibraryTable(QTableWidget):
 
         self.setColumnCount(6)
 
-        self.setHorizontalHeaderLabels(
-            [
-                "Canción",
-                "Artista",
-                "Álbum",
-                "Año",
-                "Género",
-                "Duración",
-            ]
+        self.setHorizontalHeaderLabels([
+            "Canción",
+            "Artista",
+            "Álbum",
+            "Año",
+            "Género",
+            "Duración",
+        ])
+
+        self.horizontalHeader().setSectionResizeMode(
+            QHeaderView.Stretch
+        )
+
+        self.setSelectionBehavior(
+            QAbstractItemView.SelectRows
+        )
+
+        self.setEditTriggers(
+            QAbstractItemView.NoEditTriggers
         )
 
         self.load_songs()
@@ -28,8 +42,12 @@ class LibraryTable(QTableWidget):
 
         self.setRowCount(len(SONGS))
 
-        for row, song in enumerate(SONGS):
+        for fila, cancion in enumerate(SONGS):
 
-            for column, value in enumerate(song):
+            for columna, valor in enumerate(cancion):
 
-                self.setItem(row, column, QTableWidgetItem(value))
+                self.setItem(
+                    fila,
+                    columna,
+                    QTableWidgetItem(valor),
+                )
