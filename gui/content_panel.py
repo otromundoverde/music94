@@ -1,16 +1,22 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout
+from PySide6.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+)
 
 from gui.header import Header
 from gui.search_bar import SearchBar
 from gui.filter_bar import FilterBar
 from gui.library_table import LibraryTable
+from gui.details_panel import DetailsPanel
+from gui.library_manager import LibraryManager
 
 
 class ContentPanel(QWidget):
 
     def __init__(self):
-
         super().__init__()
+
+        self.manager = LibraryManager()
 
         layout = QVBoxLayout()
 
@@ -22,93 +28,65 @@ class ContentPanel(QWidget):
 
         self.table = LibraryTable()
 
-        self.search.searchChanged.connect(
-            self.update_library
-        )
-
-        self.filters.filtersChanged.connect(
-            self.update_library
-        )
+        self.details = DetailsPanel()
 
         layout.addWidget(self.header)
+
         layout.addWidget(self.search)
+
         layout.addWidget(self.filters)
-        layout.addWidget(self.table)
+
+        layout.addWidget(self.table, 1)
+
+        layout.addWidget(self.details)
 
         self.setLayout(layout)
 
-    def update_library(self):
+        self.refresh_library()
 
-        songs = self.table.library.filter(
-
-            text=self.search.box.text(),
-
-            genre=self.filters.genre.currentText(),
-
-            decade=self.filters.decade.currentText(),
-
-            order=self.filters.order.currentText(),
-
+        self.table.song_selected.connect(
+            self.details.update_song
         )
 
-        self.table.load(songs)
+        self.search.searchChanged.connect(
+            self.refresh_library
+        )
 
-    def show_page(self, page):
+        self.filters.filtersChanged.connect(
+            self.refresh_library
+        )
 
-        self.header.set_page(page)
+    # ==================================================
 
-        if page == "Biblioteca":
+    def refresh_library(self):
 
-            self.table.show_library()
+        songs = self.manager.get_library()
 
-            self.update_library()
+        text = self.search.box.text()
 
-        elif page == "Artistas":
+        genre = self.filters.genre.currentText()
 
-            self.table.show_list(
+        decade = self.filters.decade.currentText()
 
-                "Artistas",
+        order = self.filters.order.currentText()
 
-                self.table.library.artists()
+        songs = self.manager.search(text)
 
-            )
+        songs = self.manager.filter(
+            songs=songs,
+            genre=genre,
+            decade=decade,
+        )
 
-        elif page == "Álbumes":
+        songs = self.manager.sort(
+            songs=songs,
+            order=order,
+        )
 
-            self.table.show_list(
+        self.table.load_library(songs)
 
-                "Álbumes",
+    # ==================================================
 
-                self.table.library.albums()
+    def statistics(self):
 
-            )
-
-        elif page == "Géneros":
-
-            self.table.show_list(
-
-                "Géneros",
-
-                self.table.library.genres()
-
-            )
-
-        elif page == "Décadas":
-
-            self.table.show_list(
-
-                "Décadas",
-
-                self.table.library.decades()
-
-            )
-
-        elif page == "Favoritos":
-
-            self.table.show_list(
-
-                "Favoritos",
-
-                []
-
-            )
+        return self.manager.statistics()

@@ -2,9 +2,11 @@ from PySide6.QtCore import Qt
 
 from PySide6.QtGui import QFont
 
-from PySide6.QtWidgets import QLabel
-from PySide6.QtWidgets import QVBoxLayout
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import (
+    QWidget,
+    QLabel,
+    QVBoxLayout,
+)
 
 
 class Header(QWidget):
@@ -12,19 +14,23 @@ class Header(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.title = QLabel("Biblioteca")
+        layout = QVBoxLayout()
 
-        self.title.setAlignment(Qt.AlignLeft)
+        self.title = QLabel("Inicio")
 
-        self.title.setFont(QFont("Tahoma", 18))
-
-        self.subtitle = QLabel(
-            "Music94 · Organizador musical y analizador de biblioteca"
+        self.title.setFont(
+            QFont(
+                "Segoe UI",
+                20,
+                QFont.Bold
+            )
         )
 
-        self.subtitle.setFont(QFont("Tahoma", 9))
+        self.subtitle = QLabel(
+            "Music94 • Analizador musical profesional"
+        )
 
-        layout = QVBoxLayout()
+        self.subtitle.setAlignment(Qt.AlignLeft)
 
         layout.addWidget(self.title)
 
@@ -33,5 +39,10 @@ class Header(QWidget):
         self.setLayout(layout)
 
     def set_page(self, page):
+
+        page = page.strip()
+
+        if page == "":
+            return
 
         self.title.setText(page)

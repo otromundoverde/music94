@@ -1,72 +1,54 @@
+from PySide6.QtCore import Signal
+
 from PySide6.QtWidgets import (
+    QAbstractItemView,
+    QHeaderView,
     QTableWidget,
     QTableWidgetItem,
 )
 
-from gui.library_manager import LibraryManager
-
 
 class LibraryTable(QTableWidget):
 
+    song_selected = Signal(list)
+
     def __init__(self):
-
         super().__init__()
-
-        self.library = LibraryManager()
-
-        self.show_library()
-
-    def show_library(self):
 
         self.setColumnCount(6)
 
-        self.setHorizontalHeaderLabels(
+        self.setHorizontalHeaderLabels([
+            "Canción",
+            "Artista",
+            "Álbum",
+            "Año",
+            "Género",
+            "Duración",
+        ])
 
-            [
-
-                "Canción",
-
-                "Artista",
-
-                "Álbum",
-
-                "Año",
-
-                "Género",
-
-                "Duración",
-
-            ]
-
+        self.horizontalHeader().setSectionResizeMode(
+            QHeaderView.Stretch
         )
 
-        self.load(self.library.get_songs())
+        self.setSelectionBehavior(
+            QAbstractItemView.SelectRows
+        )
 
-    def show_list(self, title, values):
+        self.setEditTriggers(
+            QAbstractItemView.NoEditTriggers
+        )
 
-        self.clear()
+        self.setAlternatingRowColors(True)
 
-        self.setColumnCount(1)
+        self.verticalHeader().setVisible(False)
 
-        self.setHorizontalHeaderLabels([title])
+        self.itemSelectionChanged.connect(
+            self.selection_changed
+        )
 
-        self.setRowCount(len(values))
+    # ====================================================
 
-        for row, value in enumerate(values):
-
-            self.setItem(
-
-                row,
-
-                0,
-
-                QTableWidgetItem(value)
-
-            )
-
-    def load(self, songs):
-
-        self.clearContents()
+    def load_library(self, songs):
 
         self.setRowCount(len(songs))
 
@@ -74,12 +56,41 @@ class LibraryTable(QTableWidget):
 
             for column, value in enumerate(song):
 
+                item = QTableWidgetItem(str(value))
+
                 self.setItem(
-
                     row,
-
                     column,
-
-                    QTableWidgetItem(str(value))
-
+                    item,
                 )
+
+    # ====================================================
+
+    def selection_changed(self):
+
+        row = self.currentRow()
+
+        if row < 0:
+            return
+
+        song = []
+
+        for column in range(self.columnCount()):
+
+            item = self.item(row, column)
+
+            if item:
+
+                song.append(item.text())
+
+            else:
+
+                song.append("")
+
+        self.song_selected.emit(song)
+
+    # ====================================================
+
+    def clear_library(self):
+
+        self.setRowCount(0)
