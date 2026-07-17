@@ -14,6 +14,7 @@ from gui.library_manager import LibraryManager
 class ContentPanel(QWidget):
 
     def __init__(self):
+
         super().__init__()
 
         self.manager = LibraryManager()
@@ -42,51 +43,46 @@ class ContentPanel(QWidget):
 
         self.setLayout(layout)
 
-        self.refresh_library()
+        # ===========================================
+        # CARGAR BIBLIOTECA INICIAL
+        # ===========================================
 
-        self.table.song_selected.connect(
-            self.details.update_song
-        )
+        self.refresh_table()
+
+        # ===========================================
+        # CONEXIONES
+        # ===========================================
 
         self.search.searchChanged.connect(
-            self.refresh_library
+            self.refresh_table
         )
 
         self.filters.filtersChanged.connect(
-            self.refresh_library
+            self.refresh_table
         )
 
-    # ==================================================
+    # -------------------------------------------------
 
-    def refresh_library(self):
+    def refresh_table(self):
 
-        songs = self.manager.get_library()
+        songs = self.manager.query(
 
-        text = self.search.box.text()
+            text=self.search.box.text(),
 
-        genre = self.filters.genre.currentText()
+            genre=self.filters.genre.currentText(),
 
-        decade = self.filters.decade.currentText()
+            decade=self.filters.decade.currentText(),
 
-        order = self.filters.order.currentText()
+            order=self.filters.order.currentText(),
 
-        songs = self.manager.search(text)
-
-        songs = self.manager.filter(
-            songs=songs,
-            genre=genre,
-            decade=decade,
         )
 
-        songs = self.manager.sort(
-            songs=songs,
-            order=order,
-        )
+        self.table.load_songs(songs)
 
-        self.table.load_library(songs)
+    # -------------------------------------------------
 
-    # ==================================================
+    def load_library(self, library):
 
-    def statistics(self):
+        self.manager.load_library(library)
 
-        return self.manager.statistics()
+        self.refresh_table()

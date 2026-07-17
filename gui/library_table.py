@@ -13,6 +13,7 @@ class LibraryTable(QTableWidget):
     song_selected = Signal(list)
 
     def __init__(self):
+
         super().__init__()
 
         self.setColumnCount(6)
@@ -48,21 +49,45 @@ class LibraryTable(QTableWidget):
 
     # ====================================================
 
-    def load_library(self, songs):
+    def load_songs(self, songs):
 
         self.setRowCount(len(songs))
 
         for row, song in enumerate(songs):
 
-            for column, value in enumerate(song):
+            values = [
 
-                item = QTableWidgetItem(str(value))
+                song.get("title", ""),
+
+                song.get("artist", ""),
+
+                song.get("album", ""),
+
+                song.get("year", ""),
+
+                song.get("genre", ""),
+
+                song.get("duration", ""),
+
+            ]
+
+            for column, value in enumerate(values):
 
                 self.setItem(
+
                     row,
+
                     column,
-                    item,
+
+                    QTableWidgetItem(str(value))
+
                 )
+
+    # ====================================================
+
+    def load_library(self, songs):
+
+        self.load_songs(songs)
 
     # ====================================================
 

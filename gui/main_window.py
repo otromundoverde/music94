@@ -5,6 +5,8 @@ from PySide6.QtWidgets import (
     QSplitter,
 )
 
+from controllers.menu_controller import MenuController
+
 from gui.content_panel import ContentPanel
 from gui.navigation_panel import NavigationPanel
 from gui.status_bar import Music94StatusBar
@@ -19,12 +21,28 @@ class Music94(QMainWindow):
         self.setWindowTitle("Music94")
         self.resize(1280, 720)
 
+        # ==========================================================
+        # MENÚ
+        # ==========================================================
+
         self.create_menu()
+
+        # ==========================================================
+        # STATUS BAR
+        # ==========================================================
 
         self.setStatusBar(Music94StatusBar())
 
+        # ==========================================================
+        # TOOLBAR
+        # ==========================================================
+
         self.toolbar = Music94ToolBar()
         self.addToolBar(self.toolbar)
+
+        # ==========================================================
+        # PANEL CENTRAL
+        # ==========================================================
 
         splitter = QSplitter(Qt.Horizontal)
 
@@ -50,8 +68,21 @@ class Music94(QMainWindow):
             self.content.details.update_song
         )
 
-    def create_menu(self):
+        # ==========================================================
+        # CONTROLLERS
+        # ==========================================================
 
+        self.menu_controller = MenuController(self)
+
+    
+        
+
+    # ==========================================================
+    # IMPORTAR MÚSICA
+    # ==========================================================
+
+   
+    def create_menu(self):
         menu = self.menuBar()
 
         archivo = menu.addMenu("Archivo")

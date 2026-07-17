@@ -4,217 +4,155 @@ from gui.library_data import SONGS
 class LibraryManager:
 
     def __init__(self):
-        self.library = SONGS.copy()
 
-    # ======================================================
-    # BIBLIOTECA
-    # ======================================================
+        self.songs = []
 
-    def get_library(self):
-        return self.library
+        self.load_demo_library()
 
-    def song_count(self):
-        return len(self.library)
+    # ---------------------------------------------------------
+
+    def load_demo_library(self):
+
+        self.songs = []
+
+        for song in SONGS:
+
+            self.songs.append({
+
+                "title": song[0],
+                "artist": song[1],
+                "album": song[2],
+                "year": str(song[3]),
+                "genre": song[4],
+                "duration": song[5],
+                "path": "",
+
+            })
+
+    # ---------------------------------------------------------
+
+    def load_library(self, library):
+
+        self.songs = list(library)
+
+    # ---------------------------------------------------------
 
     def clear(self):
-        self.library = []
+
+        self.songs = []
+
+    # ---------------------------------------------------------
 
     def add_song(self, song):
 
-        if len(song) != 6:
-            return False
+        self.songs.append(song)
 
-        self.library.append(song)
-        return True
+    # ---------------------------------------------------------
 
-    def remove_song(self, index):
+    def get_library(self):
 
-        if 0 <= index < len(self.library):
-            del self.library[index]
-            return True
+        return list(self.songs)
 
-        return False
+    # ---------------------------------------------------------
 
-    def update_song(self, index, song):
+    def query(
 
-        if 0 <= index < len(self.library):
-            self.library[index] = song
-            return True
-
-        return False
-
-    # ======================================================
-    # BÚSQUEDA
-    # ======================================================
-
-    def search(self, text):
-
-        if not text:
-            return self.library
-
-        text = text.lower()
-
-        results = []
-
-        for song in self.library:
-
-            if any(text in str(value).lower() for value in song):
-                results.append(song)
-
-        return results
-
-    # ======================================================
-    # FILTROS
-    # ======================================================
-
-    def filter(
         self,
-        songs=None,
+
+        text="",
+
         genre="Todos los géneros",
+
         decade="Todos los años",
+
+        order="Ordenar por",
+
     ):
 
-        if songs is None:
-            songs = self.library
+        results = list(self.songs)
 
-        results = songs
+        if text:
+
+            text = text.lower()
+
+            results = [
+
+                song
+
+                for song in results
+
+                if (
+
+                    text in song["title"].lower()
+
+                    or text in song["artist"].lower()
+
+                    or text in song["album"].lower()
+
+                )
+
+            ]
 
         if genre != "Todos los géneros":
 
             results = [
+
                 song
+
                 for song in results
-                if song[4] == genre
+
+                if song["genre"] == genre
+
             ]
 
         if decade != "Todos los años":
 
-            if decade == "1970s":
+            start = int(decade[:4])
 
-                results = [
-                    song
-                    for song in results
-                    if 1970 <= int(song[3]) <= 1979
-                ]
+            end = start + 9
 
-            elif decade == "1980s":
+            results = [
 
-                results = [
-                    song
-                    for song in results
-                    if 1980 <= int(song[3]) <= 1989
-                ]
+                song
 
-            elif decade == "1990s":
+                for song in results
 
-                results = [
-                    song
-                    for song in results
-                    if 1990 <= int(song[3]) <= 1999
-                ]
+                if song["year"].isdigit()
 
-            elif decade == "2000s":
+                and start <= int(song["year"]) <= end
 
-                results = [
-                    song
-                    for song in results
-                    if 2000 <= int(song[3]) <= 2009
-                ]
-
-        return results
-
-    # ======================================================
-    # ORDENAMIENTO
-    # ======================================================
-
-    def sort(self, songs=None, order="Ordenar por"):
-
-        if songs is None:
-            songs = self.library
-
-        results = songs.copy()
+            ]
 
         if order == "Título":
-            results.sort(key=lambda s: s[0])
+
+            results.sort(key=lambda s: s["title"])
 
         elif order == "Artista":
-            results.sort(key=lambda s: s[1])
+
+            results.sort(key=lambda s: s["artist"])
 
         elif order == "Álbum":
-            results.sort(key=lambda s: s[2])
+
+            results.sort(key=lambda s: s["album"])
 
         elif order == "Año":
-            results.sort(key=lambda s: s[3])
+
+            results.sort(key=lambda s: s["year"])
 
         return results
 
-    # ======================================================
-    # CONSULTAS
-    # ======================================================
-
-    def artists(self):
-
-        return sorted(
-            list(
-                {
-                    song[1]
-                    for song in self.library
-                }
-            )
-        )
-
-    def albums(self):
-
-        return sorted(
-            list(
-                {
-                    song[2]
-                    for song in self.library
-                }
-            )
-        )
-
-    def genres(self):
-
-        return sorted(
-            list(
-                {
-                    song[4]
-                    for song in self.library
-                }
-            )
-        )
-
-    def decades(self):
-
-        decades = []
-
-        for song in self.library:
-
-            decade = str(song[3])[:3] + "0s"
-
-            if decade not in decades:
-                decades.append(decade)
-
-        decades.sort()
-
-        return decades
-
-    # ======================================================
-    # ESTADÍSTICAS
-    # ======================================================
+    # ---------------------------------------------------------
 
     def statistics(self):
 
         return {
 
-            "songs": len(self.library),
+            "songs": len(self.songs),
 
-            "artists": len(self.artists()),
+            "artists": len(set(song["artist"] for song in self.songs)),
 
-            "albums": len(self.albums()),
+            "albums": len(set(song["album"] for song in self.songs)),
 
-            "genres": len(self.genres()),
+            "genres": len(set(song["genre"] for song in self.songs)),
 
-            "decades": len(self.decades()),
         }
