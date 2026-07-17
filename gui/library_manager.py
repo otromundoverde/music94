@@ -1,33 +1,9 @@
-from gui.library_data import SONGS
-
-
 class LibraryManager:
 
     def __init__(self):
 
+        # Biblioteca actual (única fuente de datos)
         self.songs = []
-
-        self.load_demo_library()
-
-    # ---------------------------------------------------------
-
-    def load_demo_library(self):
-
-        self.songs = []
-
-        for song in SONGS:
-
-            self.songs.append({
-
-                "title": song[0],
-                "artist": song[1],
-                "album": song[2],
-                "year": str(song[3]),
-                "genre": song[4],
-                "duration": song[5],
-                "path": "",
-
-            })
 
     # ---------------------------------------------------------
 
@@ -39,7 +15,7 @@ class LibraryManager:
 
     def clear(self):
 
-        self.songs = []
+        self.songs.clear()
 
     # ---------------------------------------------------------
 
@@ -149,10 +125,16 @@ class LibraryManager:
 
             "songs": len(self.songs),
 
-            "artists": len(set(song["artist"] for song in self.songs)),
+            "artists": len(
+                set(song["artist"] for song in self.songs)
+            ),
 
-            "albums": len(set(song["album"] for song in self.songs)),
+            "albums": len(
+                set(song["album"] for song in self.songs)
+            ),
 
-            "genres": len(set(song["genre"] for song in self.songs)),
+            "genres": len(
+                set(song["genre"] for song in self.songs)
+            ),
 
         }
