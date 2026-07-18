@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from analysis.audio_data import AudioData
 from analysis.backends.audio_backend import AudioBackend
 from analysis.features.feature_set import FeatureSet
 
@@ -29,25 +30,25 @@ class LibrosaBackend(AudioBackend):
 
     # ---------------------------------------------------------
 
-    def extract_features(self, song):
+    def load_audio(self, song):
 
-        features = FeatureSet()
+        audio = AudioData()
 
         if not self.available:
 
-            return features
+            return audio
 
         try:
 
-            audio_path = Path(song.path)
+            path = Path(song.path)
 
-            if not audio_path.exists():
+            if not path.exists():
 
-                return features
+                return audio
 
-            y, sr = self.librosa.load(
+            samples, sample_rate = self.librosa.load(
 
-                audio_path,
+                path,
 
                 sr=None,
 
@@ -55,26 +56,35 @@ class LibrosaBackend(AudioBackend):
 
             )
 
-            print(
+            audio.samples = samples
 
-                f"[Music94] Loaded: {audio_path.name}"
+            audio.sample_rate = sample_rate
 
-            )
+            audio.duration = len(samples) / sample_rate
 
-            print(
-
-                f"Samples: {len(y):,}"
-
-            )
-
-            print(
-
-                f"Sample Rate: {sr}"
-
-            )
+            audio.channels = 1
 
         except Exception as error:
 
             print(error)
+
+        return audio
+
+    # ---------------------------------------------------------
+
+    def extract_features(self, song):
+
+        features = FeatureSet()
+
+        audio = self.load_audio(song)
+
+        #
+        # Próximamente:
+        #
+        # BPM
+        # Key
+        # Loudness
+        # etc.
+        #
 
         return features
