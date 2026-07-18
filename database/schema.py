@@ -26,7 +26,7 @@ def create_schema(connection):
 
             country TEXT,
 
-            duration REAL,
+            duration INTEGER,
 
             bitrate INTEGER,
 
@@ -75,6 +75,62 @@ def create_schema(connection):
             last_modified TEXT
 
         )
+        """
+    )
+
+    cursor.execute(
+        """
+        CREATE INDEX IF NOT EXISTS idx_artist
+        ON songs(artist)
+        """
+    )
+
+    cursor.execute(
+        """
+        CREATE INDEX IF NOT EXISTS idx_album
+        ON songs(album)
+        """
+    )
+
+    cursor.execute(
+        """
+        CREATE INDEX IF NOT EXISTS idx_genre
+        ON songs(genre)
+        """
+    )
+
+    cursor.execute(
+        """
+        CREATE INDEX IF NOT EXISTS idx_year
+        ON songs(year)
+        """
+    )
+
+    cursor.execute(
+        """
+        CREATE INDEX IF NOT EXISTS idx_bpm
+        ON songs(bpm)
+        """
+    )
+
+    cursor.execute(
+        """
+        CREATE INDEX IF NOT EXISTS idx_key
+        ON songs(musical_key)
+        """
+    )
+
+    cursor.execute(
+        """
+        CREATE INDEX IF NOT EXISTS idx_label
+        ON songs(label)
+        """
+    )
+
+    cursor.execute(
+        """
+        CREATE INDEX IF NOT EXISTS idx_country
+        ON songs(country)
         """
     )
 
