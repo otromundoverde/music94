@@ -1,23 +1,31 @@
-from gui.library_data import SONGS
+from database.statistics_repository import StatisticsRepository
 
 
 class Statistics:
 
-    @staticmethod
-    def total_songs():
-        return len(SONGS)
+    def __init__(self):
 
-    @staticmethod
-    def total_artists():
-        artistas = {song[1] for song in SONGS}
-        return len(artistas)
+        self.repository = StatisticsRepository()
 
-    @staticmethod
-    def total_albums():
-        albumes = {song[2] for song in SONGS}
-        return len(albumes)
+    # ---------------------------------------------------------
 
-    @staticmethod
-    def total_genres():
-        generos = {song[4] for song in SONGS}
-        return len(generos)
+    def summary(self):
+
+        seconds = self.repository.total_duration()
+
+        hours = seconds // 3600
+        minutes = (seconds % 3600) // 60
+
+        return {
+
+            "songs": self.repository.total_songs(),
+
+            "artists": self.repository.total_artists(),
+
+            "albums": self.repository.total_albums(),
+
+            "genres": self.repository.total_genres(),
+
+            "duration": f"{hours}h {minutes}m",
+
+        }
