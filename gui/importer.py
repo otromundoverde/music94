@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from gui.metadata_reader import MetadataReader
+from models.song_factory import SongFactory
 
 
 class MusicImporter:
@@ -69,9 +70,12 @@ class MusicImporter:
 
             metadata = self.reader.read(file)
 
-            if metadata is not None:
+            if metadata is None:
+                continue
 
-                self.library.append(metadata)
+            song = SongFactory.from_metadata(metadata)
+
+            self.library.append(song)
 
         return self.library
 

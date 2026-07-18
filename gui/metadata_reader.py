@@ -1,5 +1,4 @@
 from mutagen import File
-from mutagen.mp3 import MP3
 from pathlib import Path
 
 
@@ -13,9 +12,6 @@ class MetadataReader:
         ".wav",
         ".aiff",
     )
-
-    def __init__(self):
-        pass
 
     def read(self, filepath):
 
@@ -41,29 +37,39 @@ class MetadataReader:
 
                 "album": self._tag(audio, "album", "Desconocido"),
 
+                "album_artist": self._tag(audio, "albumartist", ""),
+
                 "genre": self._tag(audio, "genre", "Sin género"),
 
                 "year": self._year(audio),
 
                 "track": self._track(audio),
 
-                "duration": self._duration(info),
+                "disc": self._disc(audio),
+
+                "composer": self._tag(audio, "composer", ""),
+
+                "label": self._tag(audio, "label", ""),
+
+                "country": "",
+
+                "duration": self._duration_seconds(info),
 
                 "bitrate": self._bitrate(info),
 
-                "samplerate": self._samplerate(info),
+                "sample_rate": self._samplerate(info),
 
                 "channels": self._channels(info),
 
-                "extension": filepath.suffix.lower(),
-
                 "filename": filepath.name,
+
+                "extension": filepath.suffix.lower(),
 
                 "folder": str(filepath.parent),
 
                 "path": str(filepath),
 
-                "size": filepath.stat().st_size,
+                "filesize": filepath.stat().st_size,
 
             }
 
@@ -81,8 +87,8 @@ class MetadataReader:
         value = audio[key]
 
         if isinstance(value, list):
-            if len(value):
-                return str(value[0])
+
+            return str(value[0]) if value else default
 
         return str(value)
 
@@ -95,6 +101,7 @@ class MetadataReader:
                 value = str(audio[tag][0])
 
                 if len(value) >= 4:
+
                     return value[:4]
 
         return ""
@@ -102,27 +109,28 @@ class MetadataReader:
     def _track(self, audio):
 
         if "tracknumber" not in audio:
+
             return ""
 
-        value = str(audio["tracknumber"][0])
+        return str(audio["tracknumber"][0]).split("/")[0]
 
-        return value.split("/")[0]
+    def _disc(self, audio):
 
-    def _duration(self, info):
+        if "discnumber" not in audio:
+
+            return ""
+
+        return str(audio["discnumber"][0]).split("/")[0]
+
+    def _duration_seconds(self, info):
 
         try:
 
-            seconds = int(info.info.length)
-
-            minutes = seconds // 60
-
-            seconds = seconds % 60
-
-            return f"{minutes}:{seconds:02d}"
+            return int(info.info.length)
 
         except Exception:
 
-            return ""
+            return 0
 
     def _bitrate(self, info):
 
@@ -132,24 +140,24 @@ class MetadataReader:
 
         except Exception:
 
-            return ""
+            return 0
 
     def _samplerate(self, info):
 
         try:
 
-            return info.info.sample_rate
+            return int(info.info.sample_rate)
 
         except Exception:
 
-            return ""
+            return 0
 
     def _channels(self, info):
 
         try:
 
-            return info.info.channels
+            return int(info.info.channels)
 
         except Exception:
 
-            return ""
+            return 0

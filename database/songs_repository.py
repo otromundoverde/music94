@@ -1,4 +1,7 @@
+from dataclasses import asdict
+
 from database.database import Database
+from models.song import Song
 
 
 class SongRepository:
@@ -19,13 +22,13 @@ class SongRepository:
 
     # ---------------------------------------------------------
 
-    def insert_song(self, song):
+    def insert_song(self, song: Song):
 
         cursor = self.db.cursor()
 
         cursor.execute(
             """
-            INSERT INTO songs(
+            INSERT OR REPLACE INTO songs (
 
                 title,
                 artist,
@@ -64,7 +67,8 @@ class SongRepository:
                 last_modified
 
             )
-            VALUES(
+
+            VALUES (
 
                 :title,
                 :artist,
@@ -104,7 +108,7 @@ class SongRepository:
 
             )
             """,
-            song,
+            asdict(song),
         )
 
     # ---------------------------------------------------------
@@ -135,4 +139,4 @@ class SongRepository:
 
         rows = cursor.fetchall()
 
-        return [dict(row) for row in rows]
+        return rows
