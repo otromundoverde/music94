@@ -14,7 +14,6 @@ class LibrosaBackend(AudioBackend):
 
         self.available = False
         self.librosa = None
-
         self.cache = AudioCache()
 
         try:
@@ -53,17 +52,78 @@ class LibrosaBackend(AudioBackend):
                 return audio
 
             samples, sample_rate = self.librosa.load(
-
                 path,
                 sr=None,
                 mono=True,
-
             )
 
             audio.samples = samples
             audio.sample_rate = sample_rate
             audio.duration = len(samples) / sample_rate
             audio.channels = 1
+
+            # ==========================================
+            # FEATURES PRECALCULADAS
+            # ==========================================
+
+            audio.rms = self.librosa.feature.rms(
+                y=samples
+            )
+
+            audio.onset_envelope = self.librosa.onset.onset_strength(
+                y=samples,
+                sr=sample_rate,
+            )
+
+            audio.chroma = self.librosa.feature.chroma_stft(
+                y=samples,
+                sr=sample_rate,
+            )
+
+            audio.spectral_centroid = self.librosa.feature.spectral_centroid(
+                y=samples,
+                sr=sample_rate,
+            )
+
+            audio.spectral_rolloff = self.librosa.feature.spectral_rolloff(
+                y=samples,
+                sr=sample_rate,
+            )
+
+            audio.spectral_bandwidth = self.librosa.feature.spectral_bandwidth(
+                y=samples,
+                sr=sample_rate,
+            )
+
+            audio.spectral_flatness = self.librosa.feature.spectral_flatness(
+                y=samples,
+            )
+
+            audio.zero_crossing_rate = self.librosa.feature.zero_crossing_rate(
+                y=samples,
+            )
+
+            audio.mfcc = self.librosa.feature.mfcc(
+                y=samples,
+                sr=sample_rate,
+            )
+
+            audio.mel_spectrogram = self.librosa.feature.melspectrogram(
+                y=samples,
+                sr=sample_rate,
+            )
+
+            audio.tempogram = self.librosa.feature.tempogram(
+                onset_envelope=audio.onset_envelope,
+                sr=sample_rate,
+            )
+
+            harmonic, percussive = self.librosa.effects.hpss(
+                samples
+            )
+
+            audio.harmonic = harmonic
+            audio.percussive = percussive
 
             self.cache.put(song.path, audio)
 
@@ -88,21 +148,16 @@ class LibrosaBackend(AudioBackend):
         try:
 
             tempo, _ = self.librosa.beat.beat_track(
-
                 y=audio.samples,
                 sr=audio.sample_rate,
-
             )
 
             if isinstance(tempo, np.ndarray):
 
-                if tempo.size:
-
-                    tempo = float(tempo.flat[0])
-
-                else:
-
+                if tempo.size == 0:
                     return features
+
+                tempo = float(tempo.flat[0])
 
             else:
 
@@ -111,9 +166,7 @@ class LibrosaBackend(AudioBackend):
             features.bpm = round(tempo, 2)
 
             print(
-
                 f"[Music94] {song.title} -> {features.bpm:.2f} BPM"
-
             )
 
         except Exception as error:

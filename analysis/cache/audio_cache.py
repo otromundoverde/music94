@@ -33,6 +33,24 @@ class AudioCache:
 
     # ---------------------------------------------------------
 
+    def remove(self, path):
+
+        if path in self._cache:
+
+            del self._cache[path]
+
+    # ---------------------------------------------------------
+
     def size(self):
 
         return len(self._cache)
+
+    # ---------------------------------------------------------
+
+    def statistics(self):
+
+        return {
+
+            "cached_files": len(self._cache)
+
+        }
