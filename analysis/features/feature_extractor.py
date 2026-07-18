@@ -1,16 +1,14 @@
-from analysis.features.feature_set import FeatureSet
+from analysis.backends.librosa_backend import LibrosaBackend
 
 
 class FeatureExtractor:
 
     def __init__(self):
 
-        pass
+        self.backend = LibrosaBackend()
 
     # ---------------------------------------------------------
 
     def extract(self, song):
 
-        features = FeatureSet()
-
-        return features
+        return self.backend.extract_features(song)
