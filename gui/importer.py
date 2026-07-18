@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from analysis.pipeline import AnalysisPipeline
 from gui.metadata_reader import MetadataReader
 from models.song_factory import SongFactory
 
@@ -26,6 +27,8 @@ class MusicImporter:
         self.library = []
 
         self.reader = MetadataReader()
+
+        self.pipeline = AnalysisPipeline()
 
     # ---------------------------------------------------
 
@@ -74,6 +77,8 @@ class MusicImporter:
                 continue
 
             song = SongFactory.from_metadata(metadata)
+
+            song = self.pipeline.analyze(song)
 
             self.library.append(song)
 
