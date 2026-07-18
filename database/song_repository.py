@@ -139,4 +139,4 @@ class SongRepository:
 
         rows = cursor.fetchall()
 
-        return rows
+        return [dict(row) for row in rows]

@@ -1,31 +1,35 @@
+from database.song_repository import SongRepository
+
+
 class LibraryManager:
 
     def __init__(self):
 
-        # Biblioteca actual (única fuente de datos)
-        self.songs = []
+        self.repository = SongRepository()
+
+        self.songs = self.repository.load_library()
 
     # ---------------------------------------------------------
 
     def load_library(self, library):
 
-        self.songs = list(library)
+        self.repository.insert_library(library)
+
+        self.songs = self.repository.load_library()
 
     # ---------------------------------------------------------
 
     def clear(self):
 
-        self.songs.clear()
+        self.repository.clear()
 
-    # ---------------------------------------------------------
-
-    def add_song(self, song):
-
-        self.songs.append(song)
+        self.songs = []
 
     # ---------------------------------------------------------
 
     def get_library(self):
+
+        self.songs = self.repository.load_library()
 
         return list(self.songs)
 
@@ -45,6 +49,8 @@ class LibraryManager:
 
     ):
 
+        self.songs = self.repository.load_library()
+
         results = list(self.songs)
 
         if text:
@@ -59,11 +65,11 @@ class LibraryManager:
 
                 if (
 
-                    text in song["title"].lower()
+                    text in str(song["title"]).lower()
 
-                    or text in song["artist"].lower()
+                    or text in str(song["artist"]).lower()
 
-                    or text in song["album"].lower()
+                    or text in str(song["album"]).lower()
 
                 )
 
@@ -93,7 +99,7 @@ class LibraryManager:
 
                 for song in results
 
-                if song["year"].isdigit()
+                if str(song["year"]).isdigit()
 
                 and start <= int(song["year"]) <= end
 
@@ -121,20 +127,16 @@ class LibraryManager:
 
     def statistics(self):
 
+        self.songs = self.repository.load_library()
+
         return {
 
             "songs": len(self.songs),
 
-            "artists": len(
-                set(song["artist"] for song in self.songs)
-            ),
+            "artists": len(set(song["artist"] for song in self.songs)),
 
-            "albums": len(
-                set(song["album"] for song in self.songs)
-            ),
+            "albums": len(set(song["album"] for song in self.songs)),
 
-            "genres": len(
-                set(song["genre"] for song in self.songs)
-            ),
+            "genres": len(set(song["genre"] for song in self.songs)),
 
         }
