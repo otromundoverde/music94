@@ -1,10 +1,14 @@
-from abc import ABC
-from abc import abstractmethod
+from analysis.backends.librosa_backend import LibrosaBackend
 
 
-class BaseAnalyzer(ABC):
+class BaseAnalyzer:
 
-    @abstractmethod
+    backend = LibrosaBackend()
+
+    def __init__(self):
+
+        self.audio = self.backend
+
     def analyze(self, song):
 
-        pass
+        raise NotImplementedError
