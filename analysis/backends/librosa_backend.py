@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from analysis.backends.audio_backend import AudioBackend
 from analysis.features.feature_set import FeatureSet
 
@@ -35,8 +37,44 @@ class LibrosaBackend(AudioBackend):
 
             return features
 
-        #
-        # El análisis real comenzará en v0.5.3
-        #
+        try:
+
+            audio_path = Path(song.path)
+
+            if not audio_path.exists():
+
+                return features
+
+            y, sr = self.librosa.load(
+
+                audio_path,
+
+                sr=None,
+
+                mono=True,
+
+            )
+
+            print(
+
+                f"[Music94] Loaded: {audio_path.name}"
+
+            )
+
+            print(
+
+                f"Samples: {len(y):,}"
+
+            )
+
+            print(
+
+                f"Sample Rate: {sr}"
+
+            )
+
+        except Exception as error:
+
+            print(error)
 
         return features
