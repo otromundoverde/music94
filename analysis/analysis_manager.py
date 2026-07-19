@@ -33,14 +33,4 @@ class AnalysisManager:
 
         self.key.analyze(song)
 
-        self.loudness.analyze(song)
-
-        self.dynamic.analyze(song)
-
-        self.replaygain.analyze(song)
-
-        self.mood.analyze(song)
-
-        self.similarity.analyze(song)
-
         return song
