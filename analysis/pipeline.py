@@ -37,34 +37,8 @@ class AnalysisPipeline:
 
     def analyze(self, song):
 
-        features = self.extractor.extract(song)
+    for analyzer in self.modules:
 
-        song.bpm = features.bpm
+        analyzer.analyze(song)
 
-        song.musical_key = features.musical_key
-
-        song.camelot = features.camelot
-
-        song.energy = features.energy
-
-        song.danceability = features.danceability
-
-        song.acousticness = features.acousticness
-
-        song.instrumentalness = features.instrumentalness
-
-        song.speechiness = features.speechiness
-
-        song.loudness = features.loudness
-
-        song.dynamic_range = features.dynamic_range
-
-        song.replaygain = features.replaygain
-
-        song.mood = features.mood
-
-        for analyzer in self.modules:
-
-            analyzer.analyze(song)
-
-        return song
+    return song

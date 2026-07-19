@@ -5,10 +5,6 @@ class BaseAnalyzer:
 
     backend = LibrosaBackend()
 
-    def __init__(self):
-
-        self.audio = self.backend
-
     def analyze(self, song):
 
         raise NotImplementedError
