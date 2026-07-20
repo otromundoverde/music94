@@ -6,14 +6,10 @@ from analysis.mood_analyzer import MoodAnalyzer
 from analysis.replaygain_analyzer import ReplayGainAnalyzer
 from analysis.similarity_analyzer import SimilarityAnalyzer
 
-from analysis.features.feature_extractor import FeatureExtractor
-
 
 class AnalysisPipeline:
 
     def __init__(self):
-
-        self.extractor = FeatureExtractor()
 
         self.modules = [
 
@@ -37,8 +33,8 @@ class AnalysisPipeline:
 
     def analyze(self, song):
 
-    for analyzer in self.modules:
+        for analyzer in self.modules:
 
-        analyzer.analyze(song)
+            analyzer.analyze(song)
 
-    return song
+        return song

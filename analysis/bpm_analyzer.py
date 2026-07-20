@@ -5,7 +5,7 @@ class BPMAnalyzer(BaseAnalyzer):
 
     def analyze(self, song):
 
-        features = self.audio.extract_features(song)
+        features = self.backend.extract_features(song)
 
         if features.bpm is not None:
 
