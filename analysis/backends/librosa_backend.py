@@ -237,6 +237,50 @@ class LibrosaBackend(AudioBackend):
 
             pass
 
+        # ==========================================
+        # DYNAMIC RANGE
+        # ==========================================
+
+        try:
+
+            rms_db = 20 * np.log10(
+
+                np.maximum(
+
+                    audio.rms,
+
+                    1e-10,
+
+                )
+
+            )
+
+            dynamic_range = np.max(
+
+                rms_db
+
+            ) - np.min(
+
+                rms_db
+
+            )
+
+            features.dynamic_range = float(
+
+                round(
+
+                    float(dynamic_range),
+
+                    2,
+
+                )
+
+            )
+
+        except Exception:
+
+            pass
+
         print(
             f"[Music94] {song.title} -> {features.bpm:.2f} BPM"
         )
