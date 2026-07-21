@@ -553,6 +553,88 @@ class LibrosaBackend(AudioBackend):
 
             pass
 
+        # ==========================================
+        # INSTRUMENTALNESS
+        # ==========================================
+
+        try:
+
+            harmonic = np.mean(
+                np.abs(
+                    audio.harmonic
+                )
+            )
+
+            percussive = np.mean(
+                np.abs(
+                    audio.percussive
+                )
+            )
+
+            mfcc_var = np.var(
+                audio.mfcc
+            )
+
+            harmonic_ratio = harmonic / (
+
+                harmonic +
+
+                percussive +
+
+                1e-9
+
+            )
+
+            mfcc_score = max(
+
+                0.0,
+
+                1.0 -
+
+                min(
+
+                    mfcc_var / 4000.0,
+
+                    1.0,
+
+                ),
+
+            )
+
+            instrumentalness = (
+
+                harmonic_ratio * 0.65 +
+
+                mfcc_score * 0.35
+
+            )
+
+            instrumentalness = max(
+
+                0.0,
+
+                min(
+
+                    instrumentalness,
+
+                    1.0,
+
+                ),
+
+            )
+
+            features.instrumentalness = round(
+
+                instrumentalness,
+
+                3,
+
+            )
+
+        except Exception:
+
+            pass
+
         print(
             f"[Music94] {song.title} -> {features.bpm:.2f} BPM"
         )
