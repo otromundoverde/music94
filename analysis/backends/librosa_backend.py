@@ -373,6 +373,122 @@ class LibrosaBackend(AudioBackend):
 
             pass
 
+        # ==========================================
+        # DANCEABILITY
+        # ==========================================
+
+        try:
+
+            bpm = features.bpm
+
+            if bpm is None:
+
+                bpm = 120.0
+
+            bpm_score = 1.0 - min(
+
+                abs(
+
+                    bpm - 128.0
+
+                ) / 128.0,
+
+                1.0,
+
+            )
+
+            tempogram = float(
+
+                np.mean(
+
+                    audio.tempogram
+
+                )
+
+            )
+
+            tempogram = min(
+
+                tempogram / 2.0,
+
+                1.0,
+
+            )
+
+            zcr = float(
+
+                np.mean(
+
+                    audio.zero_crossing_rate
+
+                )
+
+            )
+
+            zcr = min(
+
+                zcr * 5.0,
+
+                1.0,
+
+            )
+
+            rms = float(
+
+                np.mean(
+
+                    audio.rms
+
+                )
+
+            )
+
+            rms = min(
+
+                rms * 5.0,
+
+                1.0,
+
+            )
+
+            danceability = (
+
+                bpm_score * 0.40 +
+
+                tempogram * 0.30 +
+
+                rms * 0.20 +
+
+                zcr * 0.10
+
+            )
+
+            danceability = max(
+
+                0.0,
+
+                min(
+
+                    danceability,
+
+                    1.0,
+
+                ),
+
+            )
+
+            features.danceability = round(
+
+                danceability,
+
+                3,
+
+            )
+
+        except Exception:
+
+            pass
+
         print(
             f"[Music94] {song.title} -> {features.bpm:.2f} BPM"
         )

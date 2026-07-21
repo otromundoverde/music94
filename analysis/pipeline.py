@@ -1,4 +1,5 @@
 from analysis.bpm_analyzer import BPMAnalyzer
+from analysis.danceability_analyzer import DanceabilityAnalyzer
 from analysis.dynamic_range_analyzer import DynamicRangeAnalyzer
 from analysis.energy_analyzer import EnergyAnalyzer
 from analysis.features.feature_extractor import FeatureExtractor
@@ -22,6 +23,8 @@ class AnalysisPipeline:
             KeyAnalyzer(),
 
             EnergyAnalyzer(),
+
+            DanceabilityAnalyzer(),
 
             LoudnessAnalyzer(),
 
