@@ -5,8 +5,6 @@ class BPMAnalyzer(BaseAnalyzer):
 
     def analyze(self, song, features):
 
-        if features.bpm is not None:
-
-            song.bpm = features.bpm
+        song.bpm = features.bpm
 
         return song

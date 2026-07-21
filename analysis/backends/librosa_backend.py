@@ -62,10 +62,6 @@ class LibrosaBackend(AudioBackend):
             audio.duration = len(samples) / sample_rate
             audio.channels = 1
 
-            # ==========================================
-            # FEATURES PRECALCULADAS
-            # ==========================================
-
             audio.rms = self.librosa.feature.rms(
                 y=samples
             )
@@ -145,6 +141,10 @@ class LibrosaBackend(AudioBackend):
 
             return features
 
+        # ==========================================
+        # BPM
+        # ==========================================
+
         try:
 
             tempo, _ = self.librosa.beat.beat_track(
@@ -164,33 +164,81 @@ class LibrosaBackend(AudioBackend):
 
                 tempo = float(tempo)
 
-            features.bpm = round(tempo, 2)
-
-            # ==========================================
-            # KEY STRENGTH
-            # ==========================================
-
-            try:
-
-                chroma = np.mean(audio.chroma, axis=1)
-
-                features.key_strength = round(
-                    float(np.max(chroma)),
-                    4,
-                )
-
-            except Exception:
-
-                features.key_strength = None
-
-            print(
-                f"[Music94] {song.title} -> {features.bpm:.2f} BPM"
+            features.bpm = round(
+                tempo,
+                2,
             )
 
-        except Exception as error:
+        except Exception:
 
-            print(error)
-    
-        features.audio = audio
+            pass
+
+        # ==========================================
+        # KEY
+        # ==========================================
+
+        try:
+
+            chroma = np.mean(
+                audio.chroma,
+                axis=1,
+            )
+
+            notes = [
+                "C",
+                "C#",
+                "D",
+                "Eb",
+                "E",
+                "F",
+                "F#",
+                "G",
+                "Ab",
+                "A",
+                "Bb",
+                "B",
+            ]
+
+            index = int(np.argmax(chroma))
+
+            features.musical_key = notes[index]
+
+            features.key_strength = round(
+                float(np.max(chroma)),
+                4,
+            )
+
+        except Exception:
+
+            pass
+
+        # ==========================================
+        # LOUDNESS
+        # ==========================================
+
+        try:
+
+            rms_mean = float(
+                np.mean(audio.rms)
+            )
+
+            if rms_mean > 0:
+
+                loudness = 20 * np.log10(rms_mean)
+
+                features.loudness = float(
+                    round(
+                        float(loudness),
+                        2,
+                    )
+                )
+
+        except Exception:
+
+            pass
+
+        print(
+            f"[Music94] {song.title} -> {features.bpm:.2f} BPM"
+        )
 
         return features
