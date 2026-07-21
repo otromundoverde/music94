@@ -635,6 +635,82 @@ class LibrosaBackend(AudioBackend):
 
             pass
 
+        # ==========================================
+        # SPEECHINESS
+        # ==========================================
+
+        try:
+
+            zcr = float(
+
+                np.mean(
+
+                    audio.zero_crossing_rate
+
+                )
+
+            )
+
+            centroid = float(
+
+                np.mean(
+
+                    audio.spectral_centroid
+
+                )
+
+            )
+
+            bandwidth = float(
+
+                np.mean(
+
+                    audio.spectral_bandwidth
+
+                )
+
+            )
+
+            centroid /= audio.sample_rate / 2
+
+            bandwidth /= audio.sample_rate / 2
+
+            speechiness = (
+
+                zcr * 0.45 +
+
+                centroid * 0.35 +
+
+                bandwidth * 0.20
+
+            )
+
+            speechiness = max(
+
+                0.0,
+
+                min(
+
+                    speechiness,
+
+                    1.0,
+
+                ),
+
+            )
+
+            features.speechiness = round(
+
+                speechiness,
+
+                3,
+
+            )
+
+        except Exception:
+
+            pass
+
         print(
             f"[Music94] {song.title} -> {features.bpm:.2f} BPM"
         )
