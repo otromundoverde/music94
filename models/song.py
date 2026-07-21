@@ -57,6 +57,8 @@ class Song:
 
     valence: Optional[float] = None
 
+    brightness: Optional[float] = None
+
     # ============================
     # MUSIC94
     # ============================

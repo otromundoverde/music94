@@ -2,7 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass
-
 class FeatureSet:
 
     bpm: float | None = None
@@ -30,3 +29,7 @@ class FeatureSet:
     speechiness: float | None = None
 
     mood: str = ""
+
+    valence: float | None = None
+
+    brightness: float | None = None

@@ -777,6 +777,73 @@ class LibrosaBackend(AudioBackend):
 
             pass
 
+
+        # ==========================================
+        # BRIGHTNESS
+        # ==========================================
+
+        try:
+
+            centroid = float(
+
+                np.mean(
+
+                    audio.spectral_centroid
+
+                )
+
+            )
+
+            rolloff = float(
+
+                np.mean(
+
+                    audio.spectral_rolloff
+
+                )
+
+            )
+
+            nyquist = audio.sample_rate / 2
+
+            centroid /= nyquist
+
+            rolloff /= nyquist
+
+            brightness = (
+
+                centroid * 0.55 +
+
+                rolloff * 0.45
+
+            )
+
+            brightness = max(
+
+                0.0,
+
+                min(
+
+                    brightness,
+
+                    1.0,
+
+                ),
+
+            )
+
+            features.brightness = round(
+
+                brightness,
+
+                3,
+
+            )
+
+        except Exception:
+
+            pass
+        
         print(
             f"[Music94] {song.title} -> {features.bpm:.2f} BPM"
         )

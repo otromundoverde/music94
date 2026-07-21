@@ -12,6 +12,7 @@ from analysis.acousticness_analyzer import AcousticnessAnalyzer
 from analysis.instrumentalness_analyzer import InstrumentalnessAnalyzer
 from analysis.speechiness_analyzer import SpeechinessAnalyzer
 from analysis.valence_analyzer import ValenceAnalyzer
+from analysis.brightness_analyzer import BrightnessAnalyzer
 
 class AnalysisPipeline:
 
@@ -38,6 +39,8 @@ class AnalysisPipeline:
             ReplayGainAnalyzer(),
 
             DynamicRangeAnalyzer(),
+
+            BrightnessAnalyzer(),
 
             MoodAnalyzer(),
 
