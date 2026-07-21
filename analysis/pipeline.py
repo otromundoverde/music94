@@ -11,6 +11,7 @@ from analysis.similarity_analyzer import SimilarityAnalyzer
 from analysis.acousticness_analyzer import AcousticnessAnalyzer
 from analysis.instrumentalness_analyzer import InstrumentalnessAnalyzer
 from analysis.speechiness_analyzer import SpeechinessAnalyzer
+from analysis.valence_analyzer import ValenceAnalyzer
 
 class AnalysisPipeline:
 
@@ -39,6 +40,8 @@ class AnalysisPipeline:
             DynamicRangeAnalyzer(),
 
             MoodAnalyzer(),
+
+           ValenceAnalyzer(),
 
             SimilarityAnalyzer(),
 

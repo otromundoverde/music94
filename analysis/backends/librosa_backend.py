@@ -711,6 +711,72 @@ class LibrosaBackend(AudioBackend):
 
             pass
 
+                # ==========================================
+        # VALENCE
+        # ==========================================
+
+        try:
+
+            energy = features.energy or 0.0
+
+            dance = features.danceability or 0.0
+
+            acoustic = features.acousticness or 0.0
+
+            speech = features.speechiness or 0.0
+
+            centroid = float(
+
+                np.mean(
+
+                    audio.spectral_centroid
+
+                )
+
+            )
+
+            centroid /= audio.sample_rate / 2
+
+            valence = (
+
+                energy * 0.35 +
+
+                dance * 0.30 +
+
+                centroid * 0.20 +
+
+                (1.0 - acoustic) * 0.10 +
+
+                (1.0 - speech) * 0.05
+
+            )
+
+            valence = max(
+
+                0.0,
+
+                min(
+
+                    valence,
+
+                    1.0,
+
+                ),
+
+            )
+
+            features.valence = round(
+
+                valence,
+
+                3,
+
+            )
+
+        except Exception:
+
+            pass
+
         print(
             f"[Music94] {song.title} -> {features.bpm:.2f} BPM"
         )

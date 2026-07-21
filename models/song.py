@@ -55,6 +55,8 @@ class Song:
 
     mood: str = ""
 
+    valence: Optional[float] = None
+
     # ============================
     # MUSIC94
     # ============================
