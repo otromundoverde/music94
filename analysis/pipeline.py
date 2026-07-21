@@ -13,6 +13,7 @@ from analysis.instrumentalness_analyzer import InstrumentalnessAnalyzer
 from analysis.speechiness_analyzer import SpeechinessAnalyzer
 from analysis.valence_analyzer import ValenceAnalyzer
 from analysis.brightness_analyzer import BrightnessAnalyzer
+from analysis.timbre_analyzer import TimbreAnalyzer
 
 class AnalysisPipeline:
 
@@ -45,6 +46,8 @@ class AnalysisPipeline:
             MoodAnalyzer(),
 
            ValenceAnalyzer(),
+
+           TimbreAnalyzer(),
 
             SimilarityAnalyzer(),
 

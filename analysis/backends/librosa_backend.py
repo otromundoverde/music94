@@ -843,7 +843,38 @@ class LibrosaBackend(AudioBackend):
         except Exception:
 
             pass
-        
+
+        # ==========================================
+        # TIMBRE
+        # ==========================================
+
+        try:
+
+            mfcc = audio.mfcc
+
+            timbre = float(
+                np.mean(
+                    np.std(
+                        mfcc,
+                        axis=1,
+                    )
+                )
+            )
+
+            timbre = min(
+                timbre / 60.0,
+                1.0,
+            )
+
+            features.timbre = round(
+                timbre,
+                3,
+            )
+
+        except Exception:
+
+            pass
+
         print(
             f"[Music94] {song.title} -> {features.bpm:.2f} BPM"
         )

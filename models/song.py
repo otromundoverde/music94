@@ -59,6 +59,8 @@ class Song:
 
     brightness: Optional[float] = None
 
+    timbre: Optional[float] = None
+
     # ============================
     # MUSIC94
     # ============================

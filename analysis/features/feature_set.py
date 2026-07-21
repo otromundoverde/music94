@@ -33,3 +33,5 @@ class FeatureSet:
     valence: float | None = None
 
     brightness: float | None = None
+
+    timbre: float | None = None
