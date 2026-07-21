@@ -281,6 +281,34 @@ class LibrosaBackend(AudioBackend):
 
             pass
 
+        # ==========================================
+        # REPLAYGAIN (estimación)
+        # ==========================================
+
+        try:
+
+            if features.loudness is not None:
+
+                reference = -18.0
+
+                replaygain = reference - features.loudness
+
+                features.replaygain = float(
+
+                    round(
+
+                        replaygain,
+
+                        2,
+
+                    )
+
+                )
+
+        except Exception:
+
+            pass
+
         print(
             f"[Music94] {song.title} -> {features.bpm:.2f} BPM"
         )

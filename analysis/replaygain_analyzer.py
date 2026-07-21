@@ -5,6 +5,8 @@ class ReplayGainAnalyzer(BaseAnalyzer):
 
     def analyze(self, song, features):
 
-        song.replaygain = features.replaygain
+        if features.replaygain is not None:
+
+            song.replaygain = features.replaygain
 
         return song
