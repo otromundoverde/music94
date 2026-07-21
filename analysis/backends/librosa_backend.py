@@ -489,6 +489,70 @@ class LibrosaBackend(AudioBackend):
 
             pass
 
+        # ==========================================
+        # ACOUSTICNESS
+        # ==========================================
+
+        try:
+
+            flatness = float(
+                np.mean(
+                    audio.spectral_flatness
+                )
+            )
+
+            rolloff = float(
+                np.mean(
+                    audio.spectral_rolloff
+                )
+            )
+
+            centroid = float(
+                np.mean(
+                    audio.spectral_centroid
+                )
+            )
+
+            rolloff /= audio.sample_rate / 2
+
+            centroid /= audio.sample_rate / 2
+
+            acousticness = (
+
+                flatness * 0.55 +
+
+                (1.0 - rolloff) * 0.25 +
+
+                (1.0 - centroid) * 0.20
+
+            )
+
+            acousticness = max(
+
+                0.0,
+
+                min(
+
+                    acousticness,
+
+                    1.0,
+
+                ),
+
+            )
+
+            features.acousticness = round(
+
+                acousticness,
+
+                3,
+
+            )
+
+        except Exception:
+
+            pass
+
         print(
             f"[Music94] {song.title} -> {features.bpm:.2f} BPM"
         )

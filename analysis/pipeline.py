@@ -8,6 +8,7 @@ from analysis.loudness_analyzer import LoudnessAnalyzer
 from analysis.mood_analyzer import MoodAnalyzer
 from analysis.replaygain_analyzer import ReplayGainAnalyzer
 from analysis.similarity_analyzer import SimilarityAnalyzer
+from analysis.acousticness_analyzer import AcousticnessAnalyzer
 
 
 class AnalysisPipeline:
@@ -23,6 +24,8 @@ class AnalysisPipeline:
             KeyAnalyzer(),
 
             EnergyAnalyzer(),
+
+            AcousticnessAnalyzer(),
 
             DanceabilityAnalyzer(),
 
