@@ -190,5 +190,7 @@ class LibrosaBackend(AudioBackend):
         except Exception as error:
 
             print(error)
+    
+        features.audio = audio
 
         return features

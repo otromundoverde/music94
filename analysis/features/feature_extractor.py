@@ -11,4 +11,8 @@ class FeatureExtractor:
 
     def extract(self, song):
 
-        return self.backend.extract_features(song)
+        features = self.backend.extract_features(song)
+
+        features.audio = self.backend.load_audio(song)
+
+        return features

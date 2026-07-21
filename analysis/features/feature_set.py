@@ -1,35 +1,31 @@
-from dataclasses import dataclass
-
-
-@dataclass
 class FeatureSet:
 
-    bpm: float | None = None
+    def __init__(self):
 
-    musical_key: str = ""
+        self.audio = None
 
-    camelot: str = ""
+        self.bpm = None
 
-    energy: float | None = None
+        self.musical_key = ""
 
-    danceability: float | None = None
+        self.camelot = ""
 
-    acousticness: float | None = None
+        self.key_strength = None
 
-    instrumentalness: float | None = None
+        self.energy = None
 
-    speechiness: float | None = None
+        self.danceability = None
 
-    loudness: float | None = None
+        self.acousticness = None
 
-    dynamic_range: float | None = None
+        self.instrumentalness = None
 
-    replaygain: float | None = None
+        self.speechiness = None
 
-    mood: str = ""
+        self.loudness = None
 
-    fingerprint: str = ""
+        self.dynamic_range = None
 
-    similarity_vector: list | None = None
+        self.replaygain = None
 
-    key_strength: float | None = None
+        self.mood = ""
