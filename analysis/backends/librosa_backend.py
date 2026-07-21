@@ -155,6 +155,7 @@ class LibrosaBackend(AudioBackend):
             if isinstance(tempo, np.ndarray):
 
                 if tempo.size == 0:
+
                     return features
 
                 tempo = float(tempo.flat[0])
@@ -164,6 +165,23 @@ class LibrosaBackend(AudioBackend):
                 tempo = float(tempo)
 
             features.bpm = round(tempo, 2)
+
+            # ==========================================
+            # KEY STRENGTH
+            # ==========================================
+
+            try:
+
+                chroma = np.mean(audio.chroma, axis=1)
+
+                features.key_strength = round(
+                    float(np.max(chroma)),
+                    4,
+                )
+
+            except Exception:
+
+                features.key_strength = None
 
             print(
                 f"[Music94] {song.title} -> {features.bpm:.2f} BPM"

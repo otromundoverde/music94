@@ -3,14 +3,8 @@ from analysis.base_analyzer import BaseAnalyzer
 
 class ReplayGainAnalyzer(BaseAnalyzer):
 
-    def analyze(self, song):
+    def analyze(self, song, features):
 
-        audio = self.backend.load_audio(song)
-
-        if audio.samples is None:
-
-            return song
-
-        # Implementación real en una etapa posterior
+        song.replaygain = features.replaygain
 
         return song

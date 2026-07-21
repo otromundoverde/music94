@@ -3,9 +3,7 @@ from analysis.base_analyzer import BaseAnalyzer
 
 class BPMAnalyzer(BaseAnalyzer):
 
-    def analyze(self, song):
-
-        features = self.backend.extract_features(song)
+    def analyze(self, song, features):
 
         if features.bpm is not None:
 

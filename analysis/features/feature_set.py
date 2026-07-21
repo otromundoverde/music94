@@ -31,3 +31,5 @@ class FeatureSet:
     fingerprint: str = ""
 
     similarity_vector: list | None = None
+
+    key_strength: float | None = None
