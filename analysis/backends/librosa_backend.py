@@ -309,6 +309,70 @@ class LibrosaBackend(AudioBackend):
 
             pass
 
+                # ==========================================
+        # ENERGY
+        # ==========================================
+
+        try:
+
+            rms = float(np.mean(audio.rms))
+
+            centroid = float(
+
+                np.mean(
+
+                    audio.spectral_centroid
+
+                )
+
+            )
+
+            bandwidth = float(
+
+                np.mean(
+
+                    audio.spectral_bandwidth
+
+                )
+
+            )
+
+            energy = (
+
+                rms * 0.50 +
+
+                (centroid / 5000.0) * 0.30 +
+
+                (bandwidth / 5000.0) * 0.20
+
+            )
+
+            energy = max(
+
+                0.0,
+
+                min(
+
+                    energy,
+
+                    1.0,
+
+                ),
+
+            )
+
+            features.energy = round(
+
+                energy,
+
+                3,
+
+            )
+
+        except Exception:
+
+            pass
+
         print(
             f"[Music94] {song.title} -> {features.bpm:.2f} BPM"
         )

@@ -1,5 +1,6 @@
 from analysis.bpm_analyzer import BPMAnalyzer
 from analysis.dynamic_range_analyzer import DynamicRangeAnalyzer
+from analysis.energy_analyzer import EnergyAnalyzer
 from analysis.features.feature_extractor import FeatureExtractor
 from analysis.key_analyzer import KeyAnalyzer
 from analysis.loudness_analyzer import LoudnessAnalyzer
@@ -19,6 +20,8 @@ class AnalysisPipeline:
             BPMAnalyzer(),
 
             KeyAnalyzer(),
+
+            EnergyAnalyzer(),
 
             LoudnessAnalyzer(),
 
